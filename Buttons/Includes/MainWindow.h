@@ -17,10 +17,13 @@ class MainWindow : public Art::Window
 public:
 	MainWindow();
 	virtual ~MainWindow();
+	void updateLayout();
+
 private:
 	void doDownButtonClick(void*);
 	void doUpButtonClick(void*);
 	void updateLabel();
+	virtual void doRotationChanged(Art::Rotation newRotation);
 
 	Art::Label		m_countLabel;
 	Art::Label		m_companyLabel;

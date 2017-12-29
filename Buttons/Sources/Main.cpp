@@ -18,6 +18,7 @@
 #include <Art/DefaultDataStore.h>
 #include <MainWindow.h>
 #include <Art/Bsp.h>
+#include <Art/LevelDetector.h>
 
 using namespace Art;
 
@@ -28,6 +29,14 @@ IS42S16400J_7		sdram;
 ILI9341FbRgb565		display;
 Stmpe811I2C 		touchSensor;
 MainWindow			mainWindow;
+LevelDetector		buttonDetector;
+
+void doButtonPressed(void*)
+{
+	static const Rotation nextRotation[] = { Rotation90, Rotation180, Rotation270, Rotation0 };
+	Display* display = desktop()->display();
+	display->setRotation(nextRotation[display->rotation()]);
+}
 
 int main()
 {
@@ -42,7 +51,7 @@ int main()
 	dataStore.setFlash(ifm());
 	dataStore.setStartAddress(0x08008000);
 	dataStore.setEndAddress(  0x0800FFFF);
-	//dataStore.erase();
+	dataStore.erase();
 	dataStore.open();
 	defaultDataStore()->setTarget(&dataStore);
 
@@ -65,6 +74,12 @@ int main()
 	touchSensor.setI2CPort(i2c3());
 	touchSensor.openWith(defaultDataStore());
 
+	buttonDetector.onEvent().connect(doButtonPressed);
+	buttonDetector.setPin(button());
+	buttonDetector.open();
+
+	//TODO Implement a method to update layout before showing
+	mainWindow.updateLayout();
 	mainWindow.show();
 
 	// run GUI application
