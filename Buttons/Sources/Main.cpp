@@ -51,9 +51,8 @@ int main()
 	dataStore.setFlash(ifm());
 	dataStore.setStartAddress(0x08008000);
 	dataStore.setEndAddress(  0x0800FFFF);
-	dataStore.erase();
+	//dataStore.erase();
 	dataStore.open();
-	defaultDataStore()->setTarget(&dataStore);
 
 	sdram.setController(fmc()->sdramController1());
 	sdram.open();
@@ -72,7 +71,8 @@ int main()
 	// configure touch sensor, open with defaultDataStore to restore calibration data
 	touchSensor.setEventPin(pa15());
 	touchSensor.setI2CPort(i2c3());
-	touchSensor.openWith(defaultDataStore());
+	touchSensor.open();
+	touchSensor.restoreCalibration();
 
 	buttonDetector.onEvent().connect(doButtonPressed);
 	buttonDetector.setPin(button());

@@ -1,3 +1,4 @@
 /Debug/
 /.settings/
 *Debug.cfg
+/STM32F429I-DISCO.xml
